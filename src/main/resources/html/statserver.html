@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Take Home Assignment - Kenta Fried</title>
+<!--     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+ -->
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/jquery-ui-1.10.3.min.js"></script>
+<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.10.3.min.css">
+
+<script>
+	(function() {
+		$(function() {
+			$('#tabs').tabs();
+			$('#requestLeaderboard').button().click(loadLeaderboard);
+			$('#requestStats').button().click(loadStats);
+			$('#postStat').button().click(postStat);
+		});
+
+		$('#ajaxError').ajaxError(
+				function(e, xhr, settings, exception) {
+					$(this).text(
+							'Error in: ' + settings.url + ' - Error: '
+									+ exception + " - Response: "
+									+ xhr.responseText);
+				});
+
+		function loadLeaderboard() {
+			var url = $('#baseUrl').val()
+					+ '/statserver/stats/leaderboard?statName='
+					+ $('#statName option:selected').val();
+
+			$
+					.ajax({
+						cache : false,
+						async : false,
+						url : url,
+						type : 'GET',
+						contentType : 'text/plain',
+						dataType : 'json',
+						global : true,
+						beforeSend : function() {
+							$('input:button').hide();
+						},
+					})
+					.always(function() {
+						$('input:button').show();
+					})
+					.done(
+							function(responseJson) {
+								$("#leaderboardTable").find("tr:gt(0)")
+										.remove();
+								for (var i = 0, len = responseJson.length; i < len; i++) {
+									$('#leaderboardTable tr:last')
+											.after(
+													'<tr><td>'
+															+ responseJson[i]['rank']
+															+ '</td><td>'
+															+ responseJson[i]['userName']
+															+ '</td><td>'
+															+ responseJson[i]['value']
+															+ '</td><tr>');
+
+								}
+							});
+		}
+
+		function loadStats() {
+			var url = $('#baseUrl').val() + '/statserver/stats?userName='
+					+ $('#userName').val();
+
+			$
+					.ajax({
+						cache : false,
+						async : false,
+						url : url,
+						type : 'GET',
+						contentType : 'text/plain',
+						dataType : 'json',
+						global : true,
+						beforeSend : function() {
+							$('input:button').hide();
+						},
+					})
+					.always(function() {
+						$('input:button').show();
+					})
+					.done(
+							function(responseJson) {
+								$("#statTable").find("tr:gt(0)").remove();
+								for (var i = 0, len = responseJson.length; i < len; i++) {
+									var date = new Date(
+											responseJson[i]['createdAt'] * 1000);
+									var formattedTime = pad(date.getHours(), 2)
+											+ ':' + pad(date.getMinutes(), 2)
+											+ ':' + pad(date.getSeconds(), 2);
+									$('#statTable tr:last')
+											.after(
+													'<tr><td>'
+															+ responseJson[i]['statName']
+															+ '</td><td>'
+															+ responseJson[i]['value']
+															+ '</td><td>'
+															+ formattedTime
+															+ '</td><tr>');
+
+								}
+							});
+		}
+
+		function postStat() {
+			var url = $('#baseUrl').val() + '/statserver/stats?userName='
+					+ $('#postUserName').val();
+
+			var stat = JSON.stringify({
+				statName : $('#postStatName option:selected').val(),
+				value : $('#postValue').val(),
+				createdAt : $('#postCreatedAt').val()
+			});
+			
+
+			$.ajax({
+				cache : false,
+				async : false,
+				url : url,
+				type : 'POST',
+				contentType : 'application/json',
+				//contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+				dataType : 'json',
+				data : '{"statName": "level","value": "17687","createdAt":"1385239600000" }',
+				global : true,
+				beforeSend : function() {
+					$('input:button').hide();
+				},
+			}).always(function() {
+				$('input:button').show();
+			}).done(function(responseJson) {
+				$('#postResponse').html(responseJson.toString());
+			});
+		}
+
+		function pad(num, size) {
+			var s = '0' + num;
+			return s.substr(s.length - size);
+		}
+	})();
+</script>
+</head>
+<body>
+	<div id="general">
+		<label>Base URL:</label>
+		<input id="baseUrl" type="text" value="http://localhost:8080">
+	</div>
+	<div id="tabs">
+		<ul>
+			<li><a href="#tabs-1">sendStat</a></li>
+			<li><a href="#tabs-2">getLeaderboard</a></li>
+			<li><a href="#tabs-3">getStats</a></li>
+		</ul>
+		<div id="tabs-1">
+			<div>
+				<label>User Name:</label>
+				<input id="postUserName" type="text" />
+			</div>
+			<div>
+				<label>Stat Name:</label>
+				<select id="postStatName">
+					<option value="points">Points</option>
+					<option value="kills">Kills</option>
+					<option value="xp">Experience Points</option>
+					<option value="level">Level</option>
+				</select>
+			</div>
+			<div>
+				<label>Value:</label>
+				<input id="postValue" type="text" />
+			</div>
+			<div>
+				<label>Created At:</label>
+				<input id="postCreatedAt" type="text" />
+			</div>
+			<input id="postStat" type="button" value="POST" />
+			<div>
+				<label>Response:</label>
+				<textarea id="postResponse" rows="4" cols="50"></textarea>
+			</div>
+		</div>
+		<div id="tabs-2">
+			<label>Stat Name:</label>
+			<select id="statName">
+				<option value="points">Points</option>
+				<option value="kills">Kills</option>
+				<option value="xp">Experience Points</option>
+				<option value="level">Level</option>
+			</select>
+			<input id="requestLeaderboard" type="button" value="GET" />
+			<table id="leaderboardTable">
+				<tbody>
+					<tr>
+						<th>Rank</th>
+						<th>User Name</th>
+						<th>Value</th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="tabs-3">
+			<label>User Name:</label>
+			<input id="userName" type="text" />
+			<input id="requestStats" type="button" value="GET" />
+			<table id="statTable">
+				<tbody>
+					<tr>
+						<th>Stat</th>
+						<th>Value</th>
+						<th>Date created</th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div id="ajaxError"></div>
+
+
+</body>
