@@ -8,4 +8,4 @@ CREATE TABLE `statistics` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `stats_user_fk_idx` (`user_id`),
   CONSTRAINT `statistics_users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1107 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
