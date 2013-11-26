@@ -8,7 +8,7 @@
 		$('#postStat').button().click(postStat);
 
 		if (window.location.hostname) {
-			$('#baseUrl').val(window.location.hostname);
+			$('#baseUrl').val('http://' + window.location.hostname + ':8080');
 		} else {
 			$('#baseUrl').val('http://localhost:8080');
 		}
