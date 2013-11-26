@@ -6,11 +6,12 @@
 		$('#requestLeaderboard').button().click(loadLeaderboard);
 		$('#requestStats').button().click(loadStats);
 		$('#postStat').button().click(postStat);
+		$('#postCreatedAt').datetimepicker();
 
 		if (window.location.hostname) {
-			$('#baseUrl').val('http://' + window.location.hostname + ':8080');
+			$('#baseUrl').val('http://' + window.location.hostname);
 		} else {
-			$('#baseUrl').val('http://localhost:8080');
+			$('#baseUrl').val('http://localhost');
 		}
 	});
 
@@ -107,7 +108,7 @@
 		var stat = JSON.stringify({
 			statName : $('#postStatName option:selected').val(),
 			value : $('#postValue').val(),
-			createdAt : $('#postCreatedAt').val()
+			createdAt : new Date($('#postCreatedAt').val()).getTime()
 		});
 
 		$.ajax({
@@ -126,7 +127,7 @@
 				$('input:button').show();
 			},
 			success : function(responseJson) {
-				$('#postResponse').html(responseJson.toString());
+				$('#postResponse').html(JSON.stringify(responseJson));
 			}
 		});
 	}

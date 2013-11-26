@@ -8,14 +8,15 @@
 -->
 <script src="js/jquery-1.10.1.min.js"></script>
 <script src="js/jquery-ui-1.10.3.min.js"></script>
+<script src="js/jquery-ui-timepicker-addon.js"></script>
 <script src="js/statserver.js"></script>
 <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.10.3.min.css">
 
 </head>
 <body>
 	<div id="general">
-		<label>Base URL:</label>
-		<input id="baseUrl" type="text" value="">
+		<label class="ui-widget">REST Server Hostname:</label>
+		<input id="baseUrl" type="text" value="" class="ui-widget input" size="80">
 	</div>
 	<div id="tabs">
 		<ul>
@@ -85,6 +86,6 @@
 			</table>
 		</div>
 	</div>
-	<div id="ajaxError"></div>
+	<div id="ajaxError" class="ui-widget ui-state-error ui-corner-all"></div>
 
 </body>
