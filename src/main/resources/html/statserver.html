@@ -11,81 +11,230 @@
 <script src="js/jquery-ui-timepicker-addon.js"></script>
 <script src="js/statserver.js"></script>
 <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.10.3.min.css">
+<style>
+label,input {
+	display: inline-block;
+}
 
+label {
+	width: 250px;
+}
+
+table {
+	border-spacing: 0;
+}
+
+td,th {
+	width: 150px;
+	text-align: center;
+}
+
+div.scrollable {
+	overflow: scroll;
+	height: 200px;
+	background-color: #fff;
+}
+</style>
 </head>
 <body>
 	<div id="general">
 		<label class="ui-widget">REST Server Hostname:</label>
-		<input id="baseUrl" type="text" value="" class="ui-widget input" size="80">
+		<input id="baseUrl" type="text" value="" class="ui-widget input"
+			size="80">
 	</div>
 	<div id="tabs">
 		<ul>
-			<li><a href="#tabs-1">sendStat</a></li>
-			<li><a href="#tabs-2">getLeaderboard</a></li>
-			<li><a href="#tabs-3">getStats</a></li>
+			<li><a href="#tabSendStat">sendStat</a></li>
+			<li><a href="#tabGetLeaderboard">getLeaderboard</a></li>
+			<li><a href="#tabGetStat">getStats</a></li>
 		</ul>
-		<div id="tabs-1">
-			<div>
-				<label>User Name:</label>
-				<input id="postUserName" type="text" />
-			</div>
-			<div>
-				<label>Stat Name:</label>
-				<select id="postStatName">
-					<option value="points">Points</option>
-					<option value="kills">Kills</option>
-					<option value="xp">Experience Points</option>
-					<option value="level">Level</option>
-				</select>
-			</div>
-			<div>
-				<label>Value:</label>
-				<input id="postValue" type="text" />
-			</div>
-			<div>
-				<label>Created At:</label>
-				<input id="postCreatedAt" type="text" />
-			</div>
-			<input id="postStat" type="button" value="POST" />
-			<div>
-				<label>Response:</label>
-				<textarea id="postResponse" rows="4" cols="50"></textarea>
-			</div>
-		</div>
-		<div id="tabs-2">
-			<label>Stat Name:</label>
-			<select id="statName">
-				<option value="points">Points</option>
-				<option value="kills">Kills</option>
-				<option value="xp">Experience Points</option>
-				<option value="level">Level</option>
-			</select>
-			<input id="requestLeaderboard" type="button" value="GET" />
-			<table id="leaderboardTable">
-				<tbody>
-					<tr>
-						<th>Rank</th>
-						<th>User Name</th>
-						<th>Value</th>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div id="tabs-3">
-			<label>User Name:</label>
-			<input id="userName" type="text" />
-			<input id="requestStats" type="button" value="GET" />
-			<table id="statTable">
-				<tbody>
-					<tr>
-						<th>Stat</th>
-						<th>Value</th>
-						<th>Date created</th>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<div id="ajaxError" class="ui-widget ui-state-error ui-corner-all"></div>
 
+		<!-- SEND STAT -->
+		<div id="tabSendStat">
+			<h2>Form-Guided</h2>
+			<div class="guided">
+				<h3>Request:</h3>
+				<div class="request">
+					<div>
+						<label>User Name:</label>
+						<input class="userName" type="text" />
+					</div>
+					<div>
+						<label>Stat Name:</label>
+						<select class="statName">
+							<option value="points">Points</option>
+							<option value="kills">Kills</option>
+							<option value="xp">Experience Points</option>
+							<option value="level">Level</option>
+						</select>
+					</div>
+					<div>
+						<label>Value:</label>
+						<input class="value" type="text" />
+					</div>
+					<div>
+						<label>Created At:</label>
+						<input class="createdAt" type="text" />
+					</div>
+					<input id="postStatGuided" type="button" value="POST" />
+				</div>
+				<h3>Response:</h3>
+				<div class="response">
+					<div>
+						<label>New ID:</label>
+						<input class="id" type="text" readonly="readonly" />
+					</div>
+					<div>
+						<label>User Name:</label>
+						<input class="userName" type="text" readonly="readonly" />
+					</div>
+					<div>
+						<label>Stat Name:</label>
+						<input class="statName" type="text" readonly="readonly" />
+					</div>
+					<div>
+						<label>Value:</label>
+						<input class="value" type="text" readonly="readonly" />
+					</div>
+					<div>
+						<label>Created At:</label>
+						<input class="createdAt" type="text" readonly="readonly" />
+					</div>
+				</div>
+			</div>
+			<hr />
+			<h2>Raw JSON</h2>
+			<div class="raw">
+				<h3>Request:</h3>
+				<div class="request">
+					<div>
+						<label>Query Param:</label>
+						<input class="queryParam" type="text" value="userName=Fingir" />
+					</div>
+
+					<textarea class="rawJson" rows="5" cols="50">
+{
+	"statName" : "level",
+	"value" : "123",
+	"createdAt" : "1385432125000"
+}</textarea>
+				</div>
+				<input id="postStatRaw" type="button" value="POST" />
+				<h3>Response:</h3>
+				<div class="response">
+					<textarea class="rawJson" rows="7" cols="80" readonly="readonly"></textarea>
+				</div>
+			</div>
+		</div>
+
+		<!-- LEADERBOARD -->
+		<div id="tabGetLeaderboard">
+			<h2>Form-Guided</h2>
+			<div class="guided">
+				<h3>Request:</h3>
+				<div class="request">
+					<div>
+						<label>Stat Name:</label>
+						<select class="statName">
+							<option value="points">Points</option>
+							<option value="kills">Kills</option>
+							<option value="xp">Experience Points</option>
+							<option value="level">Level</option>
+						</select>
+					</div>
+					<input id="getLeaderboardGuided" type="button" value="GET" />
+				</div>
+				<h3>Response:</h3>
+				<div class="response">
+					<table>
+						<thead>
+							<tr>
+								<th>Rank</th>
+								<th>User Name</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="3">
+									<div class="scrollable">
+										<table id="leaderboardTable" border="1"></table>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<hr />
+			<h2>Raw JSON</h2>
+			<div class="raw">
+				<h3>Request:</h3>
+				<div class="request">
+					<div>
+						<label>Query Param:</label>
+						<input class="queryParam" type="text" value="statName=level" />
+					</div>
+					<input id="getLeaderboardRaw" type="button" value="GET" />
+				</div>
+				<h3>Response:</h3>
+				<div class="response">
+					<textarea class="rawJson" rows="7" cols="80" readonly="readonly"></textarea>
+				</div>
+			</div>
+		</div>
+
+		<!-- GET STATS -->
+		<div id="tabGetStat">
+			<h2>Form-Guided</h2>
+			<div class="guided">
+				<h3>Request:</h3>
+				<div class="request">
+					<div>
+						<label>User Name:</label>
+						<input class="userName" type="text" />
+					</div>
+					<input id="getStatsGuided" type="button" value="GET" />
+				</div>
+				<h3>Response:</h3>
+				<div class="response">
+					<table>
+						<thead>
+							<tr>
+								<th>Stat</th>
+								<th>Value</th>
+								<th>Date created</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="3">
+									<div class="scrollable">
+										<table id="statsTable" border="1"></table>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<hr />
+			<h2>Raw JSON</h2>
+			<div class="raw">
+				<h3>Request:</h3>
+				<div class="request">
+					<div>
+						<label>Query Param:</label>
+						<input class="queryParam" type="text" value="userName=fingir" />
+					</div>
+					<input id="getStatsRaw" type="button" value="GET" />
+				</div>
+				<h3>Response:</h3>
+				<div class="response">
+					<textarea class="rawJson" rows="7" cols="80" readonly="readonly"></textarea>
+				</div>
+			</div>
+		</div>
+
+		<div id="ajaxError" class="ui-widget ui-state-error ui-corner-all"></div>
 </body>
