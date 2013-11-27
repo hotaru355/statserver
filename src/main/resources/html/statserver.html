@@ -30,7 +30,7 @@ td,th {
 }
 
 div.scrollable {
-	overflow: scroll;
+	overflow: auto;
 	height: 200px;
 	background-color: #fff;
 }
@@ -57,7 +57,8 @@ div.scrollable {
 				<div class="request">
 					<div>
 						<label>User Name:</label>
-						<input class="userName" type="text" />
+						<input class="userName" type="text"
+							title="Must be an existing user name. Try 'Fingir', 'Flized' or 'Pinkin' for example." />
 					</div>
 					<div>
 						<label>Stat Name:</label>
@@ -70,7 +71,8 @@ div.scrollable {
 					</div>
 					<div>
 						<label>Value:</label>
-						<input class="value" type="text" />
+						<input class="value" type="text"
+							title="Only positive numbers are allowed." />
 					</div>
 					<div>
 						<label>Created At:</label>
@@ -83,10 +85,6 @@ div.scrollable {
 					<div>
 						<label>New ID:</label>
 						<input class="id" type="text" readonly="readonly" />
-					</div>
-					<div>
-						<label>User Name:</label>
-						<input class="userName" type="text" readonly="readonly" />
 					</div>
 					<div>
 						<label>Stat Name:</label>
@@ -109,10 +107,12 @@ div.scrollable {
 				<div class="request">
 					<div>
 						<label>Query Param:</label>
-						<input class="queryParam" type="text" value="userName=Fingir" />
+						<input class="queryParam" type="text" value="userName=Fingir"
+							title="the query param 'userName' is case sensitive and required. Other params are ignored." />
 					</div>
 
-					<textarea class="rawJson" rows="5" cols="50">
+					<textarea class="rawJson" rows="5" cols="50"
+						title="The fields 'statName', 'value' and 'createdAt' are required. The 'id' must be null.">
 {
 	"statName" : "level",
 	"value" : "123",
@@ -173,7 +173,8 @@ div.scrollable {
 				<div class="request">
 					<div>
 						<label>Query Param:</label>
-						<input class="queryParam" type="text" value="statName=level" />
+						<input class="queryParam" type="text" value="statName=level"
+							title="The query param 'statName' is case sensitive and required. Other params are ignored." />
 					</div>
 					<input id="getLeaderboardRaw" type="button" value="GET" />
 				</div>
@@ -192,7 +193,8 @@ div.scrollable {
 				<div class="request">
 					<div>
 						<label>User Name:</label>
-						<input class="userName" type="text" />
+						<input class="userName" type="text"
+							title="Must be an existing user name. Try 'Fingir', 'Flized' or 'Pinkin' for example." />
 					</div>
 					<input id="getStatsGuided" type="button" value="GET" />
 				</div>
@@ -225,7 +227,8 @@ div.scrollable {
 				<div class="request">
 					<div>
 						<label>Query Param:</label>
-						<input class="queryParam" type="text" value="userName=fingir" />
+						<input class="queryParam" type="text" value="userName=fingir"
+							title="the query param 'userName' is case sensitive and required. Other params are ignored." />
 					</div>
 					<input id="getStatsRaw" type="button" value="GET" />
 				</div>
@@ -235,6 +238,6 @@ div.scrollable {
 				</div>
 			</div>
 		</div>
-
-		<div id="ajaxError" class="ui-widget ui-state-error ui-corner-all"></div>
+	</div>
+	<div id="ajaxError" class="ui-widget ui-state-error ui-corner-all"></div>
 </body>

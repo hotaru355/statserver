@@ -3,6 +3,8 @@
 	// jQuery UI hookup and click handlers
 	$(function() {
 		$('#tabs').tabs();
+		$(document).tooltip();
+		$('#tabSendStat .request .createdAt').datetimepicker();
 
 		// click handler to POST a stat
 		$('#postStatGuided').button().click(function() {
@@ -39,8 +41,6 @@
 			var url = getBaseUrl() + '?' + $('#tabGetStat .queryParam').val();
 			loadStats(url, fillRawGet);
 		});
-
-		$('#tabSendStat .request .createdAt').datetimepicker();
 
 		if (window.location.hostname) {
 			$('#baseUrl').val('http://' + window.location.hostname);
@@ -119,9 +119,8 @@
 	function fillGuidedGet(json) {
 		$("#statsTable").find("tr").remove();
 		for (var i = 0, len = json.length; i < len; i++) {
-			var date = new Date(json[i]['createdAt'] * 1000);
-			var formattedTime = padTo2Digit(date.getHours()) + ':' + padTo2Digit(date.getMinutes()) + ':' + padTo2Digit(date.getSeconds());
-			$('#statsTable').append('<tr><td>' + json[i]['statName'] + '</td><td>' + json[i]['value'] + '</td><td>' + formattedTime + '</td><tr>');
+			var d = new Date(json[i]['createdAt']);
+			$('#statsTable').append('<tr><td>' + json[i]['statName'] + '</td><td>' + json[i]['value'] + '</td><td>' + d.toLocaleString() + '</td><tr>');
 		}
 	}
 
@@ -153,11 +152,11 @@
 	}
 
 	function fillGuidedPost(json) {
+		d = new Date(json["createdAt"]);
 		$('#tabSendStat .response .id').val(json["id"]);
-		$('#tabSendStat .response .userName').val(json["userName"]);
 		$('#tabSendStat .response .statName').val(json["statName"]);
 		$('#tabSendStat .response .value').val(json["value"]);
-		$('#tabSendStat .response .createdAt').val(new Date(json["createdAt"] * 1000));
+		$('#tabSendStat .response .createdAt').val(d.toLocaleString());
 	}
 
 	function fillRawPost(json) {
