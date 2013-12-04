@@ -10,7 +10,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import ly.l33dr.assignment.entities.leaderboards.LeaderboardEntry;
+import ly.l33dr.assignment.entities.leaderboards.Leader;
+import ly.l33dr.assignment.entities.leaderboards.Leaderboard;
 import ly.l33dr.assignment.entities.statistics.StatName;
 import ly.l33dr.assignment.entities.statistics.Statistic;
 import ly.l33dr.assignment.entities.statistics.StatisticField;
@@ -118,9 +119,8 @@ public class StatisticService {
      * @return the leaderboard
      */
     @SuppressWarnings("unchecked")
-    public List<LeaderboardEntry> getLeaderboard(Object statName) {
+    public Leaderboard getLeaderboard(StatName statName) {
         Session session = sessionFactory.openSession();
-        List<LeaderboardEntry> leaderboards = new ArrayList<LeaderboardEntry>();
         // @formatter:off
         String sql = "SELECT s.statName, s.value, s.user.userName "
                 + "FROM Statistic s "
@@ -132,16 +132,19 @@ public class StatisticService {
                 .list().iterator();
 
         int rank = 1;
+        Leaderboard leaderboard = new Leaderboard();
+        leaderboard.setStatName(statName);
+        List<Leader> leaders = new ArrayList<Leader>();
         while (results.hasNext()) {
             Object[] row = (Object[]) results.next();
-            LeaderboardEntry leaderboard = new LeaderboardEntry();
-            leaderboard.setStatName(StatName.valueOf(row[0].toString()));
-            leaderboard.setValue(Integer.parseInt(row[1].toString()));
-            leaderboard.setUserName(row[2].toString());
-            leaderboard.setRank(rank++);
-            leaderboards.add(leaderboard);
+            Leader leader = new Leader();
+            leader.setValue(Integer.parseInt(row[1].toString()));
+            leader.setUserName(row[2].toString());
+            leader.setRank(rank++);
+            leaders.add(leader);
         }
-        return leaderboards;
+        leaderboard.setLeaders(leaders);
+        return leaderboard;
     }
 
 }

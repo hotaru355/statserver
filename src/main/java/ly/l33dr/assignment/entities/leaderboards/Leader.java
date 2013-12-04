@@ -1,15 +1,7 @@
 package ly.l33dr.assignment.entities.leaderboards;
 
-import ly.l33dr.assignment.entities.statistics.StatName;
-
-/**
- * A row in the leaderboard
- *
- */
-public class LeaderboardEntry {
+public class Leader {
     private String userName;
-
-    private StatName statName;
 
     private int value;
 
@@ -21,14 +13,6 @@ public class LeaderboardEntry {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public StatName getStatName() {
-        return statName;
-    }
-
-    public void setStatName(StatName statName) {
-        this.statName = statName;
     }
 
     public int getValue() {
@@ -46,5 +30,4 @@ public class LeaderboardEntry {
     public void setRank(int rank) {
         this.rank = rank;
     }
-
 }

@@ -16,10 +16,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import ly.l33dr.assignment.entities.leaderboards.LeaderboardEntry;
+import ly.l33dr.assignment.entities.leaderboards.Leaderboard;
 import ly.l33dr.assignment.entities.statistics.StatName;
 import ly.l33dr.assignment.entities.statistics.Statistic;
 import ly.l33dr.assignment.entities.statistics.StatisticField;
+import ly.l33dr.assignment.entities.statistics.UserStats;
 import ly.l33dr.assignment.entities.users.User;
 import ly.l33dr.assignment.entities.users.UserField;
 import ly.l33dr.assignment.errors.AppErrorType;
@@ -77,7 +78,9 @@ public class StatsResource {
                     Statistic.class.getSimpleName(), StatisticField.user.getSqlName(), user.getId());
         }
 
-        return Response.ok(statistics).header("Access-Control-Allow-Origin", "*").build();
+        UserStats userStats = new UserStats(userName, statistics);
+
+        return Response.ok(userStats).build();
     }
 
     /**
@@ -119,8 +122,7 @@ public class StatsResource {
         statistic.setUser(user);
         Long id = statisticService.persist(statistic);
         URI uri = new URI(String.format("%s/%s", uriInfo.getAbsolutePath().toString(), id));
-        return Response.created(uri).entity(statistic).header("Access-Control-Allow-Origin", "*")
-                .build();
+        return Response.created(uri).entity(statistic).build();
     }
 
     /**
@@ -142,7 +144,7 @@ public class StatsResource {
             throw new NotFoundException(AppErrorType.ENTITY_NOT_FOUND,
                     Statistic.class.getSimpleName(), StatisticField.id.getSqlName(), id);
         }
-        return Response.ok(statistics.get(0)).header("Access-Control-Allow-Origin", "*").build();
+        return Response.ok(statistics.get(0)).build();
     }
 
     /**
@@ -174,14 +176,9 @@ public class StatsResource {
                     StatisticField.statName.getJavaName());
         }
 
-        List<LeaderboardEntry> leaderboads = statisticService.getLeaderboard(statName);
-        if (leaderboads.isEmpty()) {
-            throw new NotFoundException(AppErrorType.ENTITY_NOT_FOUND,
-                    LeaderboardEntry.class.getSimpleName(), StatisticField.statName.getSqlName(),
-                    statName);
-        }
+        Leaderboard leaderboad = statisticService.getLeaderboard(statName);
 
-        return Response.ok(leaderboads).header("Access-Control-Allow-Origin", "*").build();
+        return Response.ok(leaderboad).build();
     }
 
 }
